@@ -1,13 +1,9 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {Text, View} from 'react-native';
+import Navigator from './src/navigator/Navigator';
 
 const App = () => {
-    return (
-        <View>
-            <Text>Hola</Text>
-        </View>
-    );
+    return <Navigator />;
 };
 
 export default App;
