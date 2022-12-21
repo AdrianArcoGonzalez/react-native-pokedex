@@ -7,7 +7,8 @@ const headerStyle = StyleSheet.create({
     },
     title: {
         color: 'black',
-        fontSize: 20,
+        fontSize: 25,
+        fontWeight: 'bold',
     },
 });
 
