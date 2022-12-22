@@ -6,12 +6,14 @@ import {FadeInImage} from '../FadeInImage/FadeInImage';
 import pokemonStyles from './pokemonStyle';
 
 import getPicturecolor from '../../utils/getPictureColor';
+import {useNavigation} from '@react-navigation/native';
 
 interface PokemonProps {
     pokemon: SimplePokemon;
 }
 export const Pokemon = ({pokemon}: PokemonProps) => {
     const [backgroundColor, setBackgroundColor] = useState('grey');
+    const nagivation = useNavigation();
 
     useEffect(() => {
         (async () => {
@@ -28,7 +30,17 @@ export const Pokemon = ({pokemon}: PokemonProps) => {
     }, []);
 
     return (
-        <TouchableOpacity activeOpacity={0.8}>
+        <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() =>
+                nagivation.navigate(
+                    'DetailsScreen' as never,
+                    {
+                        simplePokemon: pokemon,
+                        color: backgroundColor,
+                    } as never,
+                )
+            }>
             <View style={{...pokemonStyles.cardContainer, backgroundColor}}>
                 <Text data-testID="pokemonTitle" style={pokemonStyles.title}>
                     {pokemon.name}
