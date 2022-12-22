@@ -2,7 +2,7 @@ import {useRef, useState, useCallback} from 'react';
 import pokemonApi from '../Api/pokemonsApi';
 import {PokemonResponse, Result, SimplePokemon} from '../interfaces/interfaces';
 
-const usePokemonPaginated = () => {
+export const usePokemonPaginated = () => {
     const pageUrl = useRef('https://pokeapi.co/api/v2/pokemon?limit=40');
     const [simplePokemons, setSimplePokemons] = useState<SimplePokemon[]>([]);
 
@@ -38,5 +38,3 @@ const usePokemonPaginated = () => {
 
     return {simplePokemons, loadPokemons};
 };
-
-export default usePokemonPaginated;
