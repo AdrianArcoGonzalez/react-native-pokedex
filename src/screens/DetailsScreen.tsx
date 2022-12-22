@@ -1,10 +1,19 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import React from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+    Text,
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    Image,
+    ActivityIndicator,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {RootStackParams} from '../navigator/Navigator';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FadeInImage} from '../components/FadeInImage/FadeInImage';
+import usePokemon from '../hooks/usePokemon';
+import PokemonDetails from '../components/PokemonDetails/PodemonDetails';
 
 interface DetailsScreenProps
     extends StackScreenProps<RootStackParams, 'DetailsScreen'> {}
@@ -15,14 +24,33 @@ const DetailsScreen = ({route, navigation}: DetailsScreenProps) => {
         color,
     } = route.params;
     const {top} = useSafeAreaInsets();
+    const {getPokemon, fullPokemon} = usePokemon();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        (async () => {
+            await getPokemon(id);
+            setIsLoading(false);
+        })();
+    }, [getPokemon, id]);
 
     return (
-        <View>
+        <View style={{flex: 1}}>
             <View
                 style={{
                     ...detailsScreenStyle.headerContainer,
                     backgroundColor: color,
                 }}>
+                <TouchableOpacity
+                    onPress={() => navigation.pop()}
+                    activeOpacity={0.8}
+                    style={{
+                        ...detailsScreenStyle.backButton,
+                        marginTop: top + 20,
+                    }}>
+                    <Icon name="arrow-back-outline" color={'white'} size={35} />
+                </TouchableOpacity>
+
                 <Text
                     style={{...detailsScreenStyle.pokemonName, top: top + 45}}>
                     {name + '\n'} #{id}
@@ -36,16 +64,14 @@ const DetailsScreen = ({route, navigation}: DetailsScreenProps) => {
                     uri={picture}
                     style={detailsScreenStyle.pokemonImage}
                 />
-                <TouchableOpacity
-                    onPress={() => navigation.pop()}
-                    activeOpacity={0.8}
-                    style={{
-                        ...detailsScreenStyle.backButton,
-                        marginTop: top + 20,
-                    }}>
-                    <Icon name="arrow-back-outline" color={'white'} size={35} />
-                </TouchableOpacity>
             </View>
+            {isLoading ? (
+                <View style={detailsScreenStyle.loadingContainer}>
+                    <ActivityIndicator color={color} size={50} />
+                </View>
+            ) : (
+                <PokemonDetails pokemon={fullPokemon} />
+            )}
         </View>
     );
 };
@@ -79,6 +105,11 @@ const detailsScreenStyle = StyleSheet.create({
         width: 260,
         position: 'absolute',
         bottom: -15,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 
